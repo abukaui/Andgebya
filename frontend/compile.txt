@@ -1,0 +1,21 @@
+﻿src/components/ProfileSettingsModal.tsx(1,28): error TS6133: 'useEffect' is declared but its value is never read.
+src/components/TrackingDemo.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(2,10): error TS6133: 'Wifi' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(2,34): error TS6133: 'AlertCircle' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(2,55): error TS6133: 'Navigation' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(20,3): error TS6133: 'geoError' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(22,3): error TS6133: 'lastUpdate' is declared but its value is never read.
+src/pages/courier/Sidebar.tsx(5,3): error TS6133: 'Bell' is declared but its value is never read.
+src/pages/courier/Sidebar.tsx(5,9): error TS6133: 'HelpCircle' is declared but its value is never read.
+src/pages/courier/Sidebar.tsx(16,70): error TS6133: 'profileName' is declared but its value is never read.
+src/pages/customer/index.tsx(3,10): error TS6133: 'ShoppingBag' is declared but its value is never read.
+src/pages/customer/index.tsx(3,44): error TS6133: 'MapPin' is declared but its value is never read.
+src/pages/customer/RequestModal.tsx(32,8): error TS6133: 'err' is declared but its value is never read.
+src/pages/LoginPage.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/merchant/index.tsx(30,74): error TS2345: Argument of type '""' is not assignable to parameter of type 'Product | "new" | (() => Product | "new" | null) | null'.
+src/pages/merchant/index.tsx(341,52): error TS2367: This comparison appears to be unintentional because the types 'Product' and 'string' have no overlap.
+src/pages/merchant/index.tsx(345,43): error TS2345: Argument of type '""' is not assignable to parameter of type 'SetStateAction<Product | "new" | null>'.
+src/pages/MerchantDashboard.tsx(30,74): error TS2345: Argument of type '""' is not assignable to parameter of type 'Product | "new" | (() => Product | "new" | null) | null'.
+src/pages/MerchantDashboard.tsx(337,52): error TS2367: This comparison appears to be unintentional because the types 'Product' and 'string' have no overlap.
+src/pages/MerchantDashboard.tsx(341,43): error TS2345: Argument of type '""' is not assignable to parameter of type 'SetStateAction<Product | "new" | null>'.
+src/pages/RegisterPage.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
