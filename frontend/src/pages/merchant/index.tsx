@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Store, Plus, Pencil, Trash2, Package,
   ShoppingBag, Eye, EyeOff,
   Loader2, ClipboardList,
   User, MapPin, Star,
-  Utensils, Coffee, Box
+  Utensils, Coffee, Box, Settings
 } from 'lucide-react';
 import api from '../../services/api';
 
@@ -14,11 +14,13 @@ import ProductModal from './ProductModal';
 import StatusPill from './StatusPill';
 import ProfileView from './ProfileView';
 import ShopSetup from './ShopSetup';
+import SettingsView from '../../components/SettingsView';
+import { useSettings } from '../../context/SettingsContext';
 
 // Types
 import { Shop, Product, Order, UserProfile } from './types';
 
-type Tab = 'products' | 'orders' | 'profile';
+type Tab = 'products' | 'orders' | 'profile' | 'settings';
 
 export default function MerchantDashboard() {
   const [shop, setShop] = useState<Shop | null>(null);
@@ -27,7 +29,8 @@ export default function MerchantDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState<Product | null | 'new'>('');
+  const { t } = useSettings();
+  const [editProduct, setEditProduct] = useState<Product | null | 'new'>(null);
   const [shopForm, setShopForm] = useState({ name: '', address: '' });
   const [creatingShop, setCreatingShop] = useState(false);
   const [shopError, setShopError] = useState('');
@@ -128,7 +131,7 @@ export default function MerchantDashboard() {
           </div>
 
           <nav className="space-y-2 flex-1">
-            {([['products', 'Catalog', Package], ['orders', 'Deliveries', ClipboardList], ['profile', 'Profile', User]] as const).map(([tab, label, Icon]) => (
+            {([['products', t('nav.catalog'), Package], ['orders', t('nav.deliveries'), ClipboardList], ['profile', t('nav.profile'), User], ['settings', t('nav.settings'), Settings]] as const).map(([tab, label, Icon]) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -311,7 +314,18 @@ export default function MerchantDashboard() {
                   <h2 className="text-3xl font-black text-slate-900">Merchant Center</h2>
                   <p className="text-slate-400 font-bold mt-1">Manage your professional Ardi identity</p>
                 </div>
-                <ProfileView profile={profile} shop={shop} onProfileUpdate={setProfile} />
+                 <ProfileView profile={profile} shop={shop} onProfileUpdate={setProfile} />
+              </motion.div>
+            )}
+
+            {activeTab === 'settings' && (
+              <motion.div key="settings" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <SettingsView 
+                  role="merchant" 
+                  userName={profile?.full_name} 
+                  userEmail={profile?.email} 
+                  initialSettings={profile?.settings}
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -324,6 +338,7 @@ export default function MerchantDashboard() {
           ['products', Package],
           ['orders', ClipboardList],
           ['profile', User],
+          ['settings', Settings],
         ].map(([tab, Icon]: any) => (
           <button
             key={tab}
@@ -338,11 +353,11 @@ export default function MerchantDashboard() {
       </div>
 
       <AnimatePresence>
-        {(editProduct === 'new' || (editProduct && editProduct !== '')) && (
+        {editProduct && (
           <ProductModal
             shopId={shop.id}
-            product={editProduct === 'new' ? null : editProduct as Product}
-            onClose={() => setEditProduct('')}
+            product={editProduct === 'new' ? null : editProduct}
+            onClose={() => setEditProduct(null)}
             onSaved={loadData}
           />
         )}

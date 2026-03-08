@@ -16,4 +16,5 @@ export interface UserProfile {
   phone_number: string;
   role: string;
   profile_image_url?: string;
+  settings?: any;
 }

@@ -44,4 +44,5 @@ export interface CustomerProfile {
   email: string;
   phone_number: string;
   profile_image_url?: string;
+  settings?: any;
 }

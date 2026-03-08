@@ -13,11 +13,13 @@ import ControlCenter from './ControlCenter';
 import ProfileSection from './ProfileSection';
 import DocumentUpload from './DocumentUpload';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
+import SettingsView from '../../components/SettingsView';
+import { useSettings } from '../../context/SettingsContext';
 
 // Types
 import { CourierProfile, GeoCoords } from './types';
 
-type CourierTab = 'dashboard' | 'map' | 'kyc';
+type CourierTab = 'dashboard' | 'map' | 'kyc' | 'settings';
 
 export default function ProfessionalCourierDashboard() {
   const [profile, setProfile] = useState<CourierProfile | null>(null);
@@ -26,6 +28,7 @@ export default function ProfessionalCourierDashboard() {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
+  const { t } = useSettings();
   const [activeTab, setActiveTab] = useState<CourierTab>('dashboard');
   const [pingCount, setPingCount] = useState(0);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -124,7 +127,7 @@ export default function ProfessionalCourierDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex overflow-hidden transition-colors">
       {/* Sidebar Shell */}
       <Sidebar 
         activeTab={activeTab} 
@@ -137,16 +140,16 @@ export default function ProfessionalCourierDashboard() {
       {/* Main Framework */}
       <div className="flex-1 flex flex-col h-screen overflow-y-auto relative">
         {/* Top Header */}
-        <header className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-20 h-20 px-8 flex items-center justify-between shadow-[0_2px_24px_rgba(0,0,0,0.02)]">
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800 sticky top-0 z-20 h-20 px-8 flex items-center justify-between shadow-[0_2px_24px_rgba(0,0,0,0.02)] transition-colors">
           <div className="flex items-center gap-6">
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-3 bg-slate-50 rounded-2xl text-slate-600"
+              className="lg:hidden p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl text-slate-600 dark:text-slate-400"
             >
               {mobileMenuOpen ? <X /> : <Menu />}
             </button>
             
-            <div className="hidden md:flex items-center gap-2 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100 focus-within:bg-white focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
+            <div className="hidden md:flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-4 py-2.5 rounded-2xl border border-slate-100 dark:border-slate-800 focus-within:bg-white dark:focus-within:bg-slate-700/50 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50/10 transition-all">
               <Search className="w-4 h-4 text-slate-400" />
               <input 
                  placeholder="Search station logs..." 
@@ -193,90 +196,88 @@ export default function ProfessionalCourierDashboard() {
                     <span className="text-blue-600">Hub Overview</span>
                  </nav>
                  <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-none">
-                    Good Morning, {profile?.full_name.split(' ')[0]} ⚡
+                    Good Morning, {profile?.full_name?.split(' ')[0] || 'Partner'} ⚡
                  </h2>
                  <p className="text-slate-500 font-medium mt-4 text-lg">System health is nominal. You have 0 pending dispatch requests.</p>
               </div>
 
               <div className="flex items-center gap-4">
                 {profile?.is_verified ? (
-                  <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                    <span className="text-sm font-black text-emerald-700 tracking-tight">Security Cleared</span>
-                  </div>
+                   <div className="px-6 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
+                     <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                     <span className="text-sm font-black text-emerald-700 tracking-tight">Security Cleared</span>
+                   </div>
                 ) : (
-                  <button 
-                    onClick={() => setActiveTab('kyc')}
-                    className="px-6 py-3 bg-amber-50 border border-amber-100 rounded-2xl flex items-center gap-3 hover:bg-amber-100 transition-colors"
-                  >
-                    <ShieldCheck className="w-5 h-5 text-amber-600" />
-                    <span className="text-sm font-black text-amber-700 tracking-tight">Resolve KYC Fix</span>
-                  </button>
+                   <button 
+                     onClick={() => setActiveTab('kyc')}
+                     className="px-6 py-3 bg-amber-50 border border-amber-100 rounded-2xl flex items-center gap-3 hover:bg-amber-100 transition-colors"
+                   >
+                     <ShieldCheck className="w-5 h-5 text-amber-600" />
+                     <span className="text-sm font-black text-amber-700 tracking-tight">Resolve KYC Fix</span>
+                   </button>
                 )}
               </div>
            </div>
 
            <AnimatePresence mode="wait">
              {activeTab === 'dashboard' && (
-               <motion.div 
-                 key="dashboard"
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 exit={{ opacity: 0, y: -20 }}
-                 className="space-y-12"
-               >
-                 <StatsOverview 
-                   earnings={0} 
-                   deliveries={0} 
-                   rating={5.0} 
-                   hours={0} 
-                 />
+                <motion.div 
+                   key="dashboard"
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, y: -20 }}
+                   className="space-y-12"
+                >
+                  <StatsOverview 
+                    earnings={0} 
+                    deliveries={0} 
+                    rating={5.0} 
+                    hours={0} 
+                  />
 
-                 <ControlCenter 
-                   isOnline={isOnline}
-                   isToggling={isToggling}
-                   handleToggle={handleToggle}
-                   coords={coords}
-                   geoError={geoError}
-                   pingCount={pingCount}
-                   lastUpdate={lastUpdate}
-                 />
+                  <ControlCenter 
+                    isOnline={isOnline}
+                    isToggling={isToggling}
+                    handleToggle={handleToggle}
+                    coords={coords}
+                    geoError={geoError}
+                    pingCount={pingCount}
+                    lastUpdate={lastUpdate}
+                  />
 
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <ProfileSection profile={profile} />
-                    
-                    {/* Placeholder for Recent Activity */}
-                    <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/20">
-                       <h4 className="text-2xl font-black text-slate-900 tracking-tight mb-8">Dispatch Activity</h4>
-                       <div className="flex flex-col items-center justify-center py-12 text-center opacity-30 select-none border-2 border-dashed border-slate-50 rounded-[2rem]">
-                          <Navigation className="w-16 h-16 mb-4 text-slate-300" />
-                          <p className="font-black text-lg text-slate-400">No recent logs recorded</p>
-                          <p className="text-xs font-bold mt-2">Go online to start receiving matches</p>
-                       </div>
-                    </div>
-                 </div>
-               </motion.div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <ProfileSection profile={profile} />
+                     
+                     <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/20">
+                        <h4 className="text-2xl font-black text-slate-900 tracking-tight mb-8">Dispatch Activity</h4>
+                        <div className="flex flex-col items-center justify-center py-12 text-center opacity-30 select-none border-2 border-dashed border-slate-50 rounded-[2rem]">
+                           <Navigation className="w-16 h-16 mb-4 text-slate-300" />
+                           <p className="font-black text-lg text-slate-400">No recent logs recorded</p>
+                           <p className="text-xs font-bold mt-2">Go online to start receiving matches</p>
+                        </div>
+                     </div>
+                  </div>
+                </motion.div>
              )}
 
              {activeTab === 'kyc' && (
-               <motion.div 
-                 key="kyc"
-                 initial={{ opacity: 0, scale: 0.98 }}
-                 animate={{ opacity: 1, scale: 1 }}
-                 exit={{ opacity: 0, scale: 0.98 }}
-               >
-                 <DocumentUpload />
-               </motion.div>
+                <motion.div 
+                   key="kyc"
+                   initial={{ opacity: 0, scale: 0.98 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   exit={{ opacity: 0, scale: 0.98 }}
+                >
+                   <DocumentUpload />
+                </motion.div>
              )}
              
              {activeTab === 'map' && (
                 <motion.div 
-                  key="map"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="bg-slate-900 rounded-[3rem] p-1 gradient-border h-[600px] relative overflow-hidden shadow-2xl"
+                   key="map"
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   className="bg-slate-900 rounded-[3rem] p-1 gradient-border h-[600px] relative overflow-hidden shadow-2xl"
                 >
-                   {/* Map Integration Logic Placeholder */}
                    <div className="absolute inset-0 bg-[#0c111d] flex items-center justify-center">
                       <div className="text-center">
                         <motion.div 
@@ -294,6 +295,22 @@ export default function ProfessionalCourierDashboard() {
                    </div>
                 </motion.div>
              )}
+
+             {activeTab === 'settings' && (
+                <motion.div 
+                   key="settings"
+                   initial={{ opacity: 0, x: 20 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   exit={{ opacity: 0, x: -20 }}
+                >
+                   <SettingsView 
+                     role="courier" 
+                     userName={profile?.full_name} 
+                     userEmail={profile?.email} 
+                     initialSettings={profile?.settings}
+                   />
+                </motion.div>
+             )}
            </AnimatePresence>
 
            <AnimatePresence>
@@ -308,14 +325,14 @@ export default function ProfessionalCourierDashboard() {
              )}
 
              {isProfileModalOpen && profile && (
-               <ProfileSettingsModal 
-                 user={profile as any}
-                 onClose={() => setIsProfileModalOpen(false)}
-                 onSuccess={(updatedUser) => {
-                   setProfile(updatedUser as any);
-                   setIsProfileModalOpen(false);
-                 }}
-               />
+                <ProfileSettingsModal 
+                   user={profile as any}
+                   onClose={() => setIsProfileModalOpen(false)}
+                   onSuccess={(updatedUser) => {
+                     setProfile(updatedUser as any);
+                     setIsProfileModalOpen(false);
+                   }}
+                />
              )}
            </AnimatePresence>
         </main>

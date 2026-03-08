@@ -11,6 +11,7 @@ export interface CourierProfile {
   lat: number | null;
   lng: number | null;
   profile_image_url?: string;
+  settings?: any;
 }
 
 export interface GeoCoords {

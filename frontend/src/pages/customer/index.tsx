@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Navigation, Loader2, MapPin, Search, Menu, X, Bell, Package } from 'lucide-react';
+import { Navigation, Loader2, Search, Menu, X, Bell, Package } from 'lucide-react';
 import api from '../../services/api';
 
 // Components
@@ -9,11 +9,12 @@ import ProductCard from './ProductCard';
 import RequestModal from './RequestModal';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
 import CustomerSidebar from './CustomerSidebar';
+import SettingsView from '../../components/SettingsView';
 
 // Types
 import { CatalogProduct, CustomerProfile } from './types';
 
-type CustomerTab = 'shop' | 'tracking' | 'profile';
+type CustomerTab = 'shop' | 'tracking' | 'profile' | 'settings';
 
 export default function CustomerDashboard() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
@@ -85,7 +86,7 @@ export default function CustomerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex overflow-hidden transition-colors">
       {/* Sidebar Shell */}
       <CustomerSidebar 
         activeTab={activeTab} 
@@ -97,11 +98,11 @@ export default function CustomerDashboard() {
       {/* Main Framework */}
       <div className="flex-1 flex flex-col h-screen overflow-y-auto relative">
         {/* Premium Header */}
-        <header className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-20 h-20 px-8 flex items-center justify-between shadow-[0_2px_24px_rgba(0,0,0,0.02)]">
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800 sticky top-0 z-20 h-20 px-8 flex items-center justify-between shadow-[0_2px_24px_rgba(0,0,0,0.02)] transition-colors">
           <div className="flex items-center gap-6">
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-3 bg-slate-50 rounded-2xl text-slate-600"
+              className="lg:hidden p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl text-slate-600 dark:text-slate-400"
             >
               {mobileMenuOpen ? <X /> : <Menu />}
             </button>
@@ -226,6 +227,22 @@ export default function CustomerDashboard() {
                       <h3 className="text-3xl font-black text-slate-900">Your Deliveries</h3>
                       <p className="text-slate-500 mt-3 font-medium">Tracking module is currently under construction.</p>
                    </div>
+                </motion.div>
+             )}
+
+             {activeTab === 'settings' && (
+                <motion.div 
+                   key="settings"
+                   initial={{ opacity: 0, x: 20 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   exit={{ opacity: 0, x: -20 }}
+                >
+                   <SettingsView 
+                     role="customer" 
+                     userName={profile?.full_name} 
+                     userEmail={profile?.email} 
+                     initialSettings={profile?.settings}
+                   />
                 </motion.div>
              )}
            </AnimatePresence>

@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import CourierDashboard from './pages/courier';
 import MerchantDashboard from './pages/merchant';
 import CustomerDashboard from './pages/customer';
+import { SettingsProvider } from './context/SettingsContext';
 
 // Simple Dashboard Placeholders
 const Dashboard = ({ title }: { title: string }) => (
@@ -25,20 +26,22 @@ const Dashboard = ({ title }: { title: string }) => (
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        
-        {/* Protected Routes */}
-        <Route path="/customer/home" element={<CustomerDashboard />} />
-        <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
-        <Route path="/courier/dashboard" element={<CourierDashboard />} />
-        <Route path="/admin" element={<Dashboard title="Admin Portal" />} />
-
-        {/* Default Redirect */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <SettingsProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          
+          {/* Protected Routes */}
+          <Route path="/customer/home" element={<CustomerDashboard />} />
+          <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
+          <Route path="/courier/dashboard" element={<CourierDashboard />} />
+          <Route path="/admin" element={<Dashboard title="Admin Portal" />} />
+  
+          {/* Default Redirect */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </SettingsProvider>
     </Router>
   );
 }

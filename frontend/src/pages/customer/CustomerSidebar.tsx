@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { 
   Navigation, Store, Package, 
-  LogOut, ChevronLeft
+  LogOut, ChevronLeft, Settings
 } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 
 interface SidebarProps {
   activeTab: string;
@@ -12,26 +13,28 @@ interface SidebarProps {
 }
 
 const CustomerSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }: SidebarProps) => {
+  const { t } = useSettings();
   const menuItems = [
-    { id: 'shop', icon: Store, label: 'Marketplace' },
-    { id: 'tracking', icon: Package, label: 'My Deliveries' }
+    { id: 'shop', icon: Store, label: t('nav.catalog') },
+    { id: 'tracking', icon: Package, label: t('nav.deliveries') },
+    { id: 'settings', icon: Settings, label: t('nav.settings') }
   ];
 
   return (
     <motion.div 
       animate={{ width: collapsed ? 100 : 280 }}
-      className="hidden lg:flex flex-col bg-white border-r border-slate-100 h-screen sticky top-0 transition-all duration-500 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+      className="hidden lg:flex flex-col bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 h-screen sticky top-0 transition-all duration-500 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
     >
       {/* Logo Area */}
       <div className="p-8 mb-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200 shrink-0">
+          <div className="w-12 h-12 bg-slate-900 dark:bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200 dark:shadow-none shrink-0 transition-colors">
              <Navigation className="text-white w-6 h-6 rotate-45" />
           </div>
           {!collapsed && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <h1 className="text-xl font-black text-slate-900 tracking-tighter">Ardi</h1>
-              <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Customer</p>
+              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter">Ardi</h1>
+              <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Customer</p>
             </motion.div>
           )}
         </div>

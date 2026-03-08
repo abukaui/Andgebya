@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { 
-  Navigation, LayoutDashboard, Map as MapIcon, 
-  ShieldCheck, Settings, LogOut, ChevronLeft,
-  Bell, HelpCircle
+import { Navigation, LayoutDashboard, Map as MapIcon, 
+  ShieldCheck, Settings, LogOut, ChevronLeft
 } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 
 interface SidebarProps {
   activeTab: string;
@@ -13,28 +12,30 @@ interface SidebarProps {
   profileName?: string;
 }
 
-const Sidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed, profileName }: SidebarProps) => {
+const Sidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }: SidebarProps) => {
+  const { t } = useSettings();
   const menuItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Station Overview' },
+    { id: 'dashboard', icon: LayoutDashboard, label: t('nav.dashboard') },
     { id: 'map', icon: MapIcon, label: 'Live Dispatch Map' },
-    { id: 'kyc', icon: ShieldCheck, label: 'Trust & Verification' },
+    { id: 'kyc', icon: ShieldCheck, label: t('nav.profile') },
+    { id: 'settings', icon: Settings, label: t('nav.settings') },
   ];
 
   return (
     <motion.div 
       animate={{ width: collapsed ? 100 : 280 }}
-      className="hidden lg:flex flex-col bg-white border-r border-slate-100 h-screen sticky top-0 transition-all duration-500 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+      className="hidden lg:flex flex-col bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 h-screen sticky top-0 transition-all duration-500 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
     >
       {/* Logo Area */}
       <div className="p-8 mb-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200 shrink-0">
+          <div className="w-12 h-12 bg-slate-900 dark:bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200 dark:shadow-none shrink-0 transition-colors">
              <Navigation className="text-white w-6 h-6 rotate-45" />
           </div>
           {!collapsed && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <h1 className="text-xl font-black text-slate-900 tracking-tighter">Ardi</h1>
-              <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Fleet Partner</p>
+              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter">Ardi</h1>
+              <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Fleet Partner</p>
             </motion.div>
           )}
         </div>
@@ -65,18 +66,13 @@ const Sidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed, profileName
       {/* Footer Actions */}
       <div className="p-4 mt-auto space-y-2">
         {!collapsed && (
-           <div className="px-4 py-3 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
+           <div className="px-4 py-3 mb-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 transition-colors">
               <div className="flex items-center gap-3">
                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">System Online</span>
+                 <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">System Online</span>
               </div>
            </div>
         )}
-
-        <button className="w-full flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all">
-          <Settings className="w-5 h-5 shrink-0" />
-          {!collapsed && <span className="font-bold text-sm">System Prefs</span>}
-        </button>
 
         <button 
           onClick={() => { localStorage.clear(); window.location.href = '/login'; }}
