@@ -1,7 +1,9 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage';
+import CourierDashboard from './pages/CourierDashboard';
+import MerchantDashboard from './pages/MerchantDashboard';
 
 // Simple Dashboard Placeholders
 const Dashboard = ({ title }: { title: string }) => (
@@ -23,17 +25,18 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
-        {/* Protected Routes (Logic can be expanded later) */}
+        {/* Protected Routes */}
         <Route path="/customer/home" element={<Dashboard title="Customer Home" />} />
-        <Route path="/merchant/dashboard" element={<Dashboard title="Merchant Dashboard" />} />
-        <Route path="/courier/dashboard" element={<Dashboard title="Courier Dashboard" />} />
+        <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
+        <Route path="/courier/dashboard" element={<CourierDashboard />} />
         <Route path="/admin" element={<Dashboard title="Admin Portal" />} />
 
         {/* Default Redirect */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

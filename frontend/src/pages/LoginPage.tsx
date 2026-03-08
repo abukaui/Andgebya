@@ -51,7 +51,7 @@ export default function LoginPage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">Email or Phone</label>
             <input
               {...register('emailOrPhone')}
-              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
               placeholder="name@example.com"
             />
             {errors.emailOrPhone && <p className="text-red-500 text-xs mt-1">{errors.emailOrPhone.message}</p>}
@@ -62,7 +62,7 @@ export default function LoginPage() {
             <input
               {...register('password')}
               type="password"
-              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
               placeholder="••••••••"
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
