@@ -118,7 +118,7 @@ export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
     const userResult = await pool.query(
-      'SELECT id, email, phone_number, full_name, role FROM users WHERE id = $1',
+      'SELECT id, email, phone_number, full_name, role, profile_image_url FROM users WHERE id = $1',
       [userId]
     );
 
@@ -135,3 +135,42 @@ export const getProfile = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Server error fetching profile' });
   }
 };
+
+/**
+ * PUT /api/auth/profile
+ * Update profile details including base64 image
+ */
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    const { full_name, phone_number, profile_image_url } = req.body;
+
+    // Optional validation logic could be added here
+    // e.g., check if phone_number is already used by another user
+
+    const updateResult = await pool.query(
+      `UPDATE users
+       SET full_name = COALESCE($1, full_name),
+           phone_number = COALESCE($2, phone_number),
+           profile_image_url = COALESCE($3, profile_image_url),
+           updated_at = NOW()
+       WHERE id = $4
+       RETURNING id, email, phone_number, full_name, role, profile_image_url`,
+      [full_name, phone_number, profile_image_url, userId]
+    );
+
+    if (updateResult.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: updateResult.rows[0],
+    });
+  } catch (error) {
+    console.error('[Auth] updateProfile error:', error);
+    res.status(500).json({ error: 'Server error updating profile' });
+  }
+};
+

@@ -10,6 +10,7 @@ export interface CourierProfile {
   last_active: string | null;
   lat: number | null;
   lng: number | null;
+  profile_image_url?: string;
 }
 
 export interface GeoCoords {

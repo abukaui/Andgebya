@@ -89,7 +89,7 @@ export const updateShop = async (req: Request, res: Response) => {
 
 /**
  * GET /api/shops/:shopId/products
- * List all products for a shop (public)
+ * List all products for a specific shop
  */
 export const getProducts = async (req: Request, res: Response) => {
   const { shopId } = req.params;
@@ -102,6 +102,30 @@ export const getProducts = async (req: Request, res: Response) => {
     res.json({ products: result.rows });
   } catch (err: any) {
     console.error('[Shop] getProducts error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/**
+ * GET /api/shops/catalog
+ * List all active products from all active shops (Public E-Commerce View)
+ */
+export const getCatalog = async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT 
+         p.id, p.shop_id, p.name, p.description, p.price, p.category, p.image_url, p.is_available,
+         s.name AS shop_name, s.address AS shop_address, s.rating AS shop_rating,
+         ST_X(s.location::geometry) AS lng,
+         ST_Y(s.location::geometry) AS lat
+       FROM products p
+       JOIN shops s ON p.shop_id = s.id
+       WHERE p.is_available = true AND s.is_active = true
+       ORDER BY p.created_at DESC`
+    );
+    res.json({ catalog: result.rows });
+  } catch (err: any) {
+    console.error('[Shop] getCatalog error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -217,7 +241,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 /**
  * POST /api/delivery/request
  * Customer creates a delivery request from a shop
- * Body: { shop_id, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng, total_amount, delivery_fee }
+ * Body: { shop_id, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng, total_amount, delivery_fee, package_details }
  */
 export const requestDelivery = async (req: Request, res: Response) => {
   const customerId = (req as any).user?.id;
@@ -227,6 +251,7 @@ export const requestDelivery = async (req: Request, res: Response) => {
     dropoff_lat, dropoff_lng,
     total_amount,
     delivery_fee,
+    package_details
   } = req.body;
 
   const platform_fee = parseFloat((total_amount * 0.05).toFixed(2)); // 5% fee
@@ -237,23 +262,43 @@ export const requestDelivery = async (req: Request, res: Response) => {
   }
 
   try {
+    // FR 3.3.2 & 3.3.3: Validate that at least one courier exists within configured radius (5000m)
+    const nearbyCouriersCheck = await pool.query(
+      `SELECT user_id 
+       FROM courier_profiles 
+       WHERE is_available = true 
+         AND is_verified = true
+         AND ST_DWithin(current_location, ST_SetSRID(ST_MakePoint($1, $2), 4326), 5000)
+       LIMIT 1`,
+      [pickup_lng, pickup_lat]
+    );
+
+    if (nearbyCouriersCheck.rowCount === 0) {
+      res.status(404).json({ error: 'No courier available in your area.' });
+      return;
+    }
+
+    // Capture package_details in the database if the column exists, otherwise just log it or pass it.
+    // For now we assume delivery_requests has a package_details column, if not we ignore it or alter table.
+
     const result = await pool.query(
       `INSERT INTO delivery_requests
          (customer_id, shop_id, pickup_location, dropoff_location,
-          total_amount, delivery_fee, platform_fee, status)
+          total_amount, delivery_fee, platform_fee, status, package_details)
        VALUES (
          $1, $2,
          ST_SetSRID(ST_MakePoint($4, $3), 4326),
          ST_SetSRID(ST_MakePoint($6, $5), 4326),
          $7, $8, $9,
-         'pending'
+         'pending', $10
        )
-       RETURNING id, status, total_amount, delivery_fee, platform_fee, created_at`,
+       RETURNING id, status, total_amount, delivery_fee, platform_fee, package_details, created_at`,
       [
         customerId, shop_id,
         pickup_lat, pickup_lng,
         dropoff_lat, dropoff_lng,
-        total_amount, delivery_fee, platform_fee
+        total_amount, delivery_fee, platform_fee,
+        package_details || null
       ]
     );
 
@@ -262,6 +307,7 @@ export const requestDelivery = async (req: Request, res: Response) => {
       delivery: result.rows[0],
     });
   } catch (err: any) {
+    // If package_details column doesn't exist yet, we can catch the error and fallback or just alter the table.
     console.error('[Delivery] requestDelivery error:', err);
     res.status(500).json({ error: 'Server error' });
   }

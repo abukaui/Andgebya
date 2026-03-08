@@ -311,7 +311,7 @@ export default function MerchantDashboard() {
                   <h2 className="text-3xl font-black text-slate-900">Merchant Center</h2>
                   <p className="text-slate-400 font-bold mt-1">Manage your professional Ardi identity</p>
                 </div>
-                <ProfileView profile={profile} shop={shop} />
+                <ProfileView profile={profile} shop={shop} onProfileUpdate={setProfile} />
               </motion.div>
             )}
           </AnimatePresence>

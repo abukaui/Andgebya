@@ -9,4 +9,11 @@ export interface Product {
   is_available: boolean; 
 }
 export interface Order { id: string; status: string; total_amount: number | string; customer_name: string; customer_phone: string; created_at: string; }
-export interface UserProfile { id: string; email: string; full_name: string; phone_number: string; role: string; }
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  phone_number: string;
+  role: string;
+  profile_image_url?: string;
+}

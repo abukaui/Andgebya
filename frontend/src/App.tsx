@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
 import CourierDashboard from './pages/courier';
 import MerchantDashboard from './pages/merchant';
+import CustomerDashboard from './pages/customer';
 
 // Simple Dashboard Placeholders
 const Dashboard = ({ title }: { title: string }) => (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         
         {/* Protected Routes */}
-        <Route path="/customer/home" element={<Dashboard title="Customer Home" />} />
+        <Route path="/customer/home" element={<CustomerDashboard />} />
         <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
         <Route path="/courier/dashboard" element={<CourierDashboard />} />
         <Route path="/admin" element={<Dashboard title="Admin Portal" />} />

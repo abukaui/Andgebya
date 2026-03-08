@@ -12,6 +12,7 @@ import StatsOverview from './StatsOverview';
 import ControlCenter from './ControlCenter';
 import ProfileSection from './ProfileSection';
 import DocumentUpload from './DocumentUpload';
+import ProfileSettingsModal from '../../components/ProfileSettingsModal';
 
 // Types
 import { CourierProfile, GeoCoords } from './types';
@@ -30,6 +31,7 @@ export default function ProfessionalCourierDashboard() {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const locationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -161,9 +163,16 @@ export default function ProfessionalCourierDashboard() {
                     {profile?.is_verified ? 'Verified Partner' : 'KYC Required'}
                   </p>
                </div>
-               <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 font-black">
-                  {profile?.full_name.charAt(0)}
-               </div>
+               <button 
+                 onClick={() => setIsProfileModalOpen(true)}
+                 className="w-10 h-10 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 font-black overflow-hidden shadow-sm transition-colors"
+               >
+                 {profile?.profile_image_url ? (
+                   <img src={profile?.profile_image_url} alt="Avatar" className="w-full h-full object-cover" />
+                 ) : (
+                   profile?.full_name?.charAt(0) || '?'
+                 )}
+               </button>
             </div>
             
             <button className="relative p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-blue-600 transition-colors">
@@ -287,7 +296,6 @@ export default function ProfessionalCourierDashboard() {
              )}
            </AnimatePresence>
 
-           {/* Mobile Menu Backdrop */}
            <AnimatePresence>
              {mobileMenuOpen && (
                 <motion.div 
@@ -297,6 +305,17 @@ export default function ProfessionalCourierDashboard() {
                    className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-40 lg:hidden"
                    onClick={() => setMobileMenuOpen(false)}
                 />
+             )}
+
+             {isProfileModalOpen && profile && (
+               <ProfileSettingsModal 
+                 user={profile as any}
+                 onClose={() => setIsProfileModalOpen(false)}
+                 onSuccess={(updatedUser) => {
+                   setProfile(updatedUser as any);
+                   setIsProfileModalOpen(false);
+                 }}
+               />
              )}
            </AnimatePresence>
         </main>

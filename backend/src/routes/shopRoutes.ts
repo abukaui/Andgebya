@@ -5,6 +5,7 @@ import {
   getMyShop,
   updateShop,
   getProducts,
+  getCatalog,
   addProduct,
   updateProduct,
   deleteProduct,
@@ -23,6 +24,7 @@ router.get('/mine', authorize(['merchant']), getMyShop);         // Get my shop
 router.patch('/:id', authorize(['merchant']), updateShop);       // Update my shop
 
 // ─── Product Routes ──────────────────────────────────────────
+router.get('/catalog', getCatalog);                                    // Global product catalog (public)
 router.get('/:shopId/products', getProducts);                          // List products (public)
 router.post('/:shopId/products', authorize(['merchant']), addProduct); // Add product
 router.patch('/products/:productId', authorize(['merchant']), updateProduct); // Update product
