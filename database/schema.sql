@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS products (
     name         TEXT NOT NULL,
     description  TEXT,
     price        DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
+    category     TEXT DEFAULT 'Food',  -- 'Food' or 'Other'
     image_url    TEXT,
     is_available BOOLEAN DEFAULT TRUE,
     created_at   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

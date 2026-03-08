@@ -35,10 +35,6 @@ app.use('/api/shops', shopRoutes);        // Module 3: Shop & Products
 app.use('/api/delivery', deliveryRoutes); // Module 3: Delivery Requests
 
 // --- Admin / Misc Protected Routes ---
-app.get('/api/profile', authenticate, (req, res) => {
-  res.json({ message: 'User profile accessed', user: (req as any).user });
-});
-
 app.get('/api/admin', authenticate, authorize(['admin']), (req, res) => {
   res.json({ message: 'Admin dashboard accessed' });
 });

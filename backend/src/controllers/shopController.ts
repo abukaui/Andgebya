@@ -113,7 +113,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const addProduct = async (req: Request, res: Response) => {
   const userId = (req as any).user?.id;
   const { shopId } = req.params;
-  const { name, description, price, image_url } = req.body;
+  const { name, description, price, category, image_url } = req.body;
 
   if (!name || price == null) {
     res.status(400).json({ error: 'name and price are required' });
@@ -132,10 +132,10 @@ export const addProduct = async (req: Request, res: Response) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO products (shop_id, name, description, price, image_url)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO products (shop_id, name, description, price, category, image_url)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [shopId, name, description || null, price, image_url || null]
+      [shopId, name, description || null, price, category || 'Food', image_url || null]
     );
     res.status(201).json({ message: 'Product added', product: result.rows[0] });
   } catch (err: any) {
@@ -151,7 +151,7 @@ export const addProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   const userId = (req as any).user?.id;
   const { productId } = req.params;
-  const { name, description, price, image_url, is_available } = req.body;
+  const { name, description, price, category, image_url, is_available } = req.body;
 
   try {
     const result = await pool.query(
@@ -159,15 +159,16 @@ export const updateProduct = async (req: Request, res: Response) => {
        SET name         = COALESCE($1, p.name),
            description  = COALESCE($2, p.description),
            price        = COALESCE($3, p.price),
-           image_url    = COALESCE($4, p.image_url),
-           is_available = COALESCE($5, p.is_available),
+           category     = COALESCE($4, p.category),
+           image_url    = COALESCE($5, p.image_url),
+           is_available = COALESCE($6, p.is_available),
            updated_at   = NOW()
        FROM shops s
-       WHERE p.id = $6
+       WHERE p.id = $7
          AND p.shop_id = s.id
-         AND s.owner_id = $7
+         AND s.owner_id = $8
        RETURNING p.*`,
-      [name, description, price, image_url, is_available, productId, userId]
+      [name, description, price, category, image_url, is_available, productId, userId]
     );
 
     if (result.rowCount === 0) {

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ArrowRight, 
-  ShoppingBag, 
-  Bike, 
-  ShieldCheck, 
-  Map, 
-  Zap, 
-  Lock, 
+import {
+  ArrowRight,
+  ShoppingBag,
+  Bike,
+  ShieldCheck,
+  Map,
+  Zap,
+  Lock,
   Smartphone,
   Menu,
   X
@@ -26,9 +26,9 @@ const Navbar = () => {
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
               <Bike className="text-white w-6 h-6" />
             </div>
-            <span className="text-2xl font-black italic tracking-tighter text-slate-900">Tokkuma</span>
+            <span className="text-2xl font-black italic tracking-tighter text-slate-900">Ardi</span>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
             <a href="#how" className="hover:text-blue-600 transition-colors">How It Works</a>
             <a href="#couriers" className="hover:text-blue-600 transition-colors">For Couriers</a>
@@ -66,7 +66,7 @@ const Navbar = () => {
 };
 
 const FeatureCard = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <motion.div 
+  <motion.div
     whileHover={{ y: -5 }}
     className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all group"
   >
@@ -113,7 +113,7 @@ export default function LandingPage() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -147,7 +147,7 @@ export default function LandingPage() {
               { icon: Map, step: 2, title: "Locate", desc: "Nearby verified couriers receive a broadcast for nearby orders." },
               { icon: Zap, step: 3, title: "Deliver", desc: "The first courier accepts and completes your delivery instantly." }
             ].map((item, idx) => (
-              <motion.div 
+              <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ export default function LandingPage() {
       {/* For Businesses / Couriers */}
       <section id="shops" className="py-24 px-4 bg-slate-900 overflow-hidden relative">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -208,7 +208,7 @@ export default function LandingPage() {
             </Link>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}

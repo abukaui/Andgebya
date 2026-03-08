@@ -110,3 +110,28 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Server error during login' });
   }
 };
+
+/**
+ * GET /api/auth/profile
+ */
+export const getProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    const userResult = await pool.query(
+      'SELECT id, email, phone_number, full_name, role FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      user: userResult.rows[0],
+    });
+  } catch (error) {
+    console.error('[Auth] getProfile error:', error);
+    res.status(500).json({ error: 'Server error fetching profile' });
+  }
+};

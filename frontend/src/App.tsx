@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
-import CourierDashboard from './pages/CourierDashboard';
-import MerchantDashboard from './pages/MerchantDashboard';
+import CourierDashboard from './pages/courier';
+import MerchantDashboard from './pages/merchant';
 
 // Simple Dashboard Placeholders
 const Dashboard = ({ title }: { title: string }) => (

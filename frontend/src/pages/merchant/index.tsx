@@ -7,16 +7,16 @@ import {
   User, MapPin, Star,
   Utensils, Coffee, Box
 } from 'lucide-react';
-import api from '../services/api';
+import api from '../../services/api';
 
 // Components
-import ProductModal from './merchant/ProductModal';
-import StatusPill from './merchant/StatusPill';
-import ProfileView from './merchant/ProfileView';
-import ShopSetup from './merchant/ShopSetup';
+import ProductModal from './ProductModal';
+import StatusPill from './StatusPill';
+import ProfileView from './ProfileView';
+import ShopSetup from './ShopSetup';
 
 // Types
-import { Shop, Product, Order, UserProfile } from './merchant/types';
+import { Shop, Product, Order, UserProfile } from './types';
 
 type Tab = 'products' | 'orders' | 'profile';
 
@@ -38,7 +38,7 @@ export default function MerchantDashboard() {
         api.get('/shops/mine'),
         api.get('/auth/profile')
       ]);
-
+      
       const fetchedShop = shopRes.data.shop;
       setShop(fetchedShop);
       setProfile(profileRes.data.user);
@@ -104,12 +104,12 @@ export default function MerchantDashboard() {
 
   if (!shop) {
     return (
-      <ShopSetup
-        shopForm={shopForm}
-        setShopForm={setShopForm}
-        handleCreateShop={handleCreateShop}
-        creatingShop={creatingShop}
-        shopError={shopError}
+      <ShopSetup 
+        shopForm={shopForm} 
+        setShopForm={setShopForm} 
+        handleCreateShop={handleCreateShop} 
+        creatingShop={creatingShop} 
+        shopError={shopError} 
       />
     );
   }
@@ -117,7 +117,7 @@ export default function MerchantDashboard() {
   return (
     <div className="min-h-screen bg-slate-50 pb-24 lg:pb-8">
       <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[280px_1fr] min-h-screen">
-
+        
         {/* Sidenav (Desktop) */}
         <div className="hidden lg:flex flex-col p-8 sticky top-0 h-screen">
           <div className="flex items-center gap-4 mb-12">
@@ -132,8 +132,9 @@ export default function MerchantDashboard() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black transition-all ${activeTab === tab ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-400 hover:bg-white hover:text-slate-600'
-                  }`}
+                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black transition-all ${
+                  activeTab === tab ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' : 'text-slate-400 hover:bg-white hover:text-slate-600'
+                }`}
               >
                 <Icon className="w-5 h-5" />
                 {label}
@@ -157,7 +158,7 @@ export default function MerchantDashboard() {
 
         {/* Main Content Area */}
         <div className="p-5 lg:p-12 overflow-y-auto max-w-4xl mx-auto w-full">
-
+          
           <div className="lg:hidden flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
@@ -214,12 +215,13 @@ export default function MerchantDashboard() {
                             </div>
                           )}
                           <div className="absolute top-4 left-4 flex gap-2">
-                            <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest backdrop-blur-md ${p.category === 'Food' ? 'bg-orange-500/80 text-white' :
-                                p.category === 'Drink' ? 'bg-blue-500/80 text-white' :
-                                  'bg-slate-800/80 text-white'
-                              }`}>
-                              {p.category}
-                            </span>
+                             <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest backdrop-blur-md ${
+                               p.category === 'Food' ? 'bg-orange-500/80 text-white' : 
+                               p.category === 'Drink' ? 'bg-blue-500/80 text-white' : 
+                               'bg-slate-800/80 text-white'
+                             }`}>
+                               {p.category}
+                             </span>
                           </div>
                           {!p.is_available && (
                             <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center">
@@ -236,12 +238,13 @@ export default function MerchantDashboard() {
                             <span className="text-blue-600 font-black whitespace-nowrap">ETB {Number(p.price).toFixed(0)}</span>
                           </div>
                           <p className="text-slate-400 text-sm font-medium line-clamp-2 h-10 mb-6">{p.description || 'No description provided'}</p>
-
+                          
                           <div className="flex items-center gap-2 border-t border-slate-50 pt-5">
                             <button
                               onClick={() => handleToggleAvailability(p)}
-                              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${p.is_available ? 'bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600' : 'bg-green-50 text-green-600 hover:bg-green-100'
-                                }`}
+                              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                p.is_available ? 'bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600' : 'bg-green-50 text-green-600 hover:bg-green-100'
+                              }`}
                             >
                               {p.is_available ? <><EyeOff className="w-3 h-3" /> Hide</> : <><Eye className="w-3 h-3" /> Show</>}
                             </button>
@@ -286,9 +289,9 @@ export default function MerchantDashboard() {
                             <StatusPill status={o.status} />
                           </div>
                           <p className="text-slate-400 font-bold text-sm flex items-center gap-2">
-                            {o.customer_phone}
-                            <span className="w-1 h-1 bg-slate-200 rounded-full" />
-                            {new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                             {o.customer_phone} 
+                             <span className="w-1 h-1 bg-slate-200 rounded-full" /> 
+                             {new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                         </div>
                         <div className="text-left md:text-right border-t md:border-t-0 md:border-l border-slate-50 pt-4 md:pt-0 md:pl-6">
@@ -325,8 +328,9 @@ export default function MerchantDashboard() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeTab === tab ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 -translate-y-2' : 'text-slate-400'
-              }`}
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
+              activeTab === tab ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 -translate-y-2' : 'text-slate-400'
+            }`}
           >
             <Icon className="w-6 h-6 pill-current" />
           </button>
