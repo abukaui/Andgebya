@@ -15,6 +15,7 @@ import DocumentUpload from './DocumentUpload';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
 import SettingsView from '../../components/SettingsView';
 import { useSettings } from '../../context/SettingsContext';
+import JobNotificationModal, { Job } from './JobNotificationModal';
 
 // Types
 import { CourierProfile, GeoCoords } from './types';
@@ -33,6 +34,7 @@ export default function ProfessionalCourierDashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [activeJob, setActiveJob] = useState<Job | null>(null);
 
   const locationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -105,6 +107,47 @@ export default function ProfessionalCourierDashboard() {
   };
 
   useEffect(() => () => stopTracking(), [stopTracking]);
+
+  // -- Job Polling Logic --
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+
+    const pollJobs = async () => {
+      if (!isOnline || activeJob) return;
+      try {
+        const { data } = await api.get('/delivery/available');
+        if (data.jobs && data.jobs.length > 0) {
+          // If we find a job and we don't have one active, show the first one
+          setActiveJob(data.jobs[0]);
+        }
+      } catch (err) {
+        console.error('Failed to poll jobs', err);
+      }
+    };
+
+    if (isOnline) {
+      interval = setInterval(pollJobs, 3000); // Poll every 3 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isOnline, activeJob]);
+
+  const handleAcceptJob = async (jobId: string) => {
+    try {
+      await api.post(`/delivery/${jobId}/accept`);
+      setActiveJob(null);
+      // Refresh statistics or active delivery status here
+      loadProfile();
+    } catch (err: any) {
+      throw err; // Let the modal handle the error display
+    }
+  };
+
+  const handleRejectJob = () => {
+    setActiveJob(null);
+  };
 
   if (isLoading) {
     return (
@@ -329,6 +372,15 @@ export default function ProfessionalCourierDashboard() {
                 />
              )}
            </AnimatePresence>
+            <AnimatePresence>
+              {activeJob && (
+                <JobNotificationModal 
+                  job={activeJob}
+                  onAccept={handleAcceptJob}
+                  onReject={handleRejectJob}
+                />
+              )}
+            </AnimatePresence>
         </main>
       </div>
     </div>

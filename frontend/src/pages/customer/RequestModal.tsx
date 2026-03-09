@@ -40,6 +40,13 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
     setIsSubmitting(true);
     setError('');
 
+    // Guard: ensure the shop has GPS coordinates stored
+    if (product.lat == null || product.lng == null) {
+      setError('This shop does not have GPS coordinates set up. Please ask the merchant to update their shop location.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const deliveryFee = 50.00; // Mock base fee
       const totalAmount = Number(product.price) + deliveryFee;

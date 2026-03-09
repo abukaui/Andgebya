@@ -52,7 +52,7 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors.map(e => e.message).join(', ') });
+      res.status(400).json({ error: error.issues.map((e: any) => e.message).join(', ') });
       return;
     }
     console.error('[Auth] register error:', error);
@@ -103,7 +103,7 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error: error.errors.map(e => e.message).join(', ') });
+      res.status(400).json({ error: error.issues.map((e: any) => e.message).join(', ') });
       return;
     }
     console.error('[Auth] login error:', error);

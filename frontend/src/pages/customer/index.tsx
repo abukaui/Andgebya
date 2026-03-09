@@ -7,6 +7,7 @@ import api from '../../services/api';
 import SearchBar from './SearchBar';
 import ProductCard from './ProductCard';
 import RequestModal from './RequestModal';
+import PaymentModal from './PaymentModal';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
 import CustomerSidebar from './CustomerSidebar';
 import SettingsView from '../../components/SettingsView';
@@ -29,6 +30,7 @@ export default function CustomerDashboard() {
   // Modal State
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [pendingPayment, setPendingPayment] = useState<{ id: string; amount: number } | null>(null);
 
   // Layout State
   const [activeTab, setActiveTab] = useState<CustomerTab>('shop');
@@ -269,10 +271,21 @@ export default function CustomerDashboard() {
             product={selectedProduct}
             onClose={() => setSelectedProduct(null)}
             onSuccess={(delivery) => {
-               setSelectedProduct(null);
-               alert(`Delivery requested successfully! ID: ${delivery.id}`);
-               // TODO: Redirect to tracking view
+              setSelectedProduct(null);
+              // Open Payment Modal right after delivery is created
+              if (delivery?.id) {
+                setPendingPayment({ id: delivery.id, amount: delivery.total_amount });
+              }
             }}
+          />
+        )}
+
+        {pendingPayment && (
+          <PaymentModal
+            deliveryId={pendingPayment.id}
+            totalAmount={pendingPayment.amount}
+            onClose={() => setPendingPayment(null)}
+            onSuccess={() => setPendingPayment(null)}
           />
         )}
 

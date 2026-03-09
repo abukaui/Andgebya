@@ -1,4 +1,4 @@
-export interface Shop { id: string; name: string; address: string; rating: number; is_active: boolean; }
+export interface Shop { id: string; name: string; address: string; rating: number; is_active: boolean; lat?: number | null; lng?: number | null; }
 export interface Product { 
   id: string; 
   name: string; 

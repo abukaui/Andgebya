@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import courierRoutes from './routes/courierRoutes';
 import shopRoutes from './routes/shopRoutes';
 import deliveryRoutes from './routes/deliveryRoutes';
+import adminRoutes from './routes/adminRoutes';
 import { authenticate, authorize } from './middleware/auth';
 
 // Load .env from backend/ root
@@ -32,9 +33,10 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 
 // --- Protected Feature Routes ---
-app.use('/api/courier', courierRoutes); // Module 2: Location Services
+app.use('/api/courier', courierRoutes);   // Module 2: Location Services
 app.use('/api/shops', shopRoutes);        // Module 3: Shop & Products
-app.use('/api/delivery', deliveryRoutes); // Module 3: Delivery Requests
+app.use('/api/delivery', deliveryRoutes); // Module 3+4: Delivery Requests & Matching
+app.use('/api/admin', adminRoutes);       // Module 5: Admin Financial Controls
 
 // --- Admin / Misc Protected Routes ---
 app.get('/api/admin', authenticate, authorize(['admin']), (req, res) => {

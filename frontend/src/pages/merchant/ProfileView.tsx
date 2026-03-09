@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { User, LogOut, ChevronRight, Store, ShoppingBag, Settings } from 'lucide-react';
+import { User, LogOut, ChevronRight, Store, ShoppingBag, Settings, MapPin } from 'lucide-react';
 import { UserProfile, Shop } from './types';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
+import ShopLocationModal from './ShopLocationModal';
 
 interface ProfileViewProps {
   profile: UserProfile | null;
   shop: Shop | null;
+  onShopUpdate?: (updatedShop: Shop) => void;
   onProfileUpdate?: (updatedProfile: UserProfile) => void;
 }
 
-const ProfileView = ({ profile, shop, onProfileUpdate }: ProfileViewProps) => {
+const ProfileView = ({ profile, shop: initialShop, onProfileUpdate, onShopUpdate }: ProfileViewProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [shop, setShop] = useState<Shop | null>(initialShop);
 
   if (!profile) return null;
   return (
@@ -64,13 +68,24 @@ const ProfileView = ({ profile, shop, onProfileUpdate }: ProfileViewProps) => {
               <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
                 <Store className="w-5 h-5" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Shop Status</p>
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-slate-900">{shop.name}</p>
                   <span className={`w-2 h-2 rounded-full ${shop.is_active ? 'bg-green-500' : 'bg-slate-300'}`} />
                 </div>
               </div>
+              <button
+                onClick={() => setIsLocationModalOpen(true)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  shop.lat != null
+                    ? 'bg-green-50 text-green-600 hover:bg-green-100'
+                    : 'bg-amber-50 text-amber-600 hover:bg-amber-100 animate-pulse'
+                }`}
+              >
+                <MapPin className="w-3 h-3" />
+                {shop.lat != null ? 'GPS Set ✓' : 'Set Location'}
+              </button>
             </div>
           )}
         </div>
@@ -98,6 +113,20 @@ const ProfileView = ({ profile, shop, onProfileUpdate }: ProfileViewProps) => {
           onSuccess={(updatedUser: UserProfile) => {
             if (onProfileUpdate) onProfileUpdate(updatedUser);
             setIsModalOpen(false);
+          }}
+        />
+      )}
+
+      {isLocationModalOpen && shop && (
+        <ShopLocationModal
+          shopId={shop.id}
+          currentLat={shop.lat}
+          currentLng={shop.lng}
+          onClose={() => setIsLocationModalOpen(false)}
+          onSaved={(lat, lng) => {
+            const updatedShop = { ...shop, lat, lng };
+            setShop(updatedShop);
+            if (onShopUpdate) onShopUpdate(updatedShop);
           }}
         />
       )}

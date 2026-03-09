@@ -1,0 +1,2 @@
+﻿src/pages/courier/index.tsx(37,10): error TS6133: 'availableJobs' is declared but its value is never read.
+src/pages/courier/JobNotificationModal.tsx(2,18): error TS6133: 'AnimatePresence' is declared but its value is never read.

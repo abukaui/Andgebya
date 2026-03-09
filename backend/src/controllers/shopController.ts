@@ -61,18 +61,42 @@ export const updateShop = async (req: Request, res: Response) => {
   const userId = (req as any).user?.id;
   const { id } = req.params;
   const { name, address, is_active } = req.body;
+  const lat = req.body.lat != null ? parseFloat(req.body.lat) : null;
+  const lng = req.body.lng != null ? parseFloat(req.body.lng) : null;
 
   try {
-    const result = await pool.query(
-      `UPDATE shops
-       SET name = COALESCE($1, name),
-           address = COALESCE($2, address),
-           is_active = COALESCE($3, is_active),
-           updated_at = NOW()
-       WHERE id = $4 AND owner_id = $5
-       RETURNING *`,
-      [name, address, is_active, id, userId]
-    );
+    // If lat & lng provided, update location; otherwise keep existing
+    let queryText: string;
+    let params: any[];
+
+    if (lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)) {
+      queryText = `
+        UPDATE shops
+        SET name      = COALESCE($1, name),
+            address   = COALESCE($2, address),
+            is_active = COALESCE($3, is_active),
+            location  = ST_SetSRID(ST_MakePoint($6::float8, $5::float8), 4326),
+            updated_at = NOW()
+        WHERE id = $4 AND owner_id = $7
+        RETURNING id, name, address, rating, is_active,
+                  ST_Y(location::geometry) AS lat,
+                  ST_X(location::geometry) AS lng`;
+      params = [name, address, is_active, id, lat, lng, userId];
+    } else {
+      queryText = `
+        UPDATE shops
+        SET name      = COALESCE($1, name),
+            address   = COALESCE($2, address),
+            is_active = COALESCE($3, is_active),
+            updated_at = NOW()
+        WHERE id = $4 AND owner_id = $5
+        RETURNING id, name, address, rating, is_active,
+                  CASE WHEN location IS NOT NULL THEN ST_Y(location::geometry) ELSE NULL END AS lat,
+                  CASE WHEN location IS NOT NULL THEN ST_X(location::geometry) ELSE NULL END AS lng`;
+      params = [name, address, is_active, id, userId];
+    }
+
+    const result = await pool.query(queryText, params);
 
     if (result.rowCount === 0) {
       res.status(404).json({ error: 'Shop not found or not yours' });
@@ -81,9 +105,10 @@ export const updateShop = async (req: Request, res: Response) => {
     res.json({ message: 'Shop updated', shop: result.rows[0] });
   } catch (err: any) {
     console.error('[Shop] updateShop error:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', detail: err.message });
   }
 };
+
 
 // ─── PRODUCT CRUD ─────────────────────────────────────────────────────────────
 
@@ -256,8 +281,16 @@ export const requestDelivery = async (req: Request, res: Response) => {
 
   const platform_fee = parseFloat((total_amount * 0.05).toFixed(2)); // 5% fee
 
-  if (!shop_id || !pickup_lat || !pickup_lng || !dropoff_lat || !dropoff_lng) {
-    res.status(400).json({ error: 'shop_id, pickup and dropoff coordinates are required' });
+  if (!shop_id) {
+    res.status(400).json({ error: 'shop_id is required' });
+    return;
+  }
+  if (pickup_lat == null || pickup_lng == null) {
+    res.status(400).json({ error: 'pickup_lat and pickup_lng are required. The shop may not have GPS coordinates set.' });
+    return;
+  }
+  if (dropoff_lat == null || dropoff_lng == null) {
+    res.status(400).json({ error: 'dropoff_lat and dropoff_lng are required' });
     return;
   }
 

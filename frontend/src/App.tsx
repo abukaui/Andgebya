@@ -5,23 +5,10 @@ import LandingPage from './pages/LandingPage';
 import CourierDashboard from './pages/courier';
 import MerchantDashboard from './pages/merchant';
 import CustomerDashboard from './pages/customer';
+import AdminDashboard from './pages/admin';
 import { SettingsProvider } from './context/SettingsContext';
 
-// Simple Dashboard Placeholders
-const Dashboard = ({ title }: { title: string }) => (
-  <div className="min-h-screen flex items-center justify-center bg-slate-50">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold text-slate-900">{title}</h1>
-      <p className="text-slate-500 mt-2">Welcome to your Ardi workspace.</p>
-      <button 
-        onClick={() => { localStorage.clear(); window.location.href = '/login'; }}
-        className="mt-6 text-primary-600 font-semibold hover:underline"
-      >
-        Logout
-      </button>
-    </div>
-  </div>
-);
+
 
 function App() {
   return (
@@ -36,7 +23,7 @@ function App() {
           <Route path="/customer/home" element={<CustomerDashboard />} />
           <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
           <Route path="/courier/dashboard" element={<CourierDashboard />} />
-          <Route path="/admin" element={<Dashboard title="Admin Portal" />} />
+          <Route path="/admin" element={<AdminDashboard />} />
   
           {/* Default Redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />

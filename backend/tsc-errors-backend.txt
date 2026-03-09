@@ -1,0 +1,6 @@
+﻿src/controllers/authController.ts(55,43): error TS2339: Property 'errors' does not exist on type 'ZodError<unknown>'.
+src/controllers/authController.ts(55,54): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/controllers/authController.ts(106,43): error TS2339: Property 'errors' does not exist on type 'ZodError<unknown>'.
+src/controllers/authController.ts(106,54): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/services/auth/kycService.ts(63,9): error TS2304: Cannot find name 'db'.
+src/services/matching/matchingLogic.ts(11,23): error TS2307: Cannot find module 'ioredis' or its corresponding type declarations.
