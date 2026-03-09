@@ -4,7 +4,7 @@ import { TrendingUp, Package, Star, Clock, ArrowUpRight, ArrowDownRight } from '
 const Card = ({ icon: Icon, label, value, trend, trendValue, color, secondaryLabel }: any) => (
   <motion.div 
     whileHover={{ y: -5 }}
-    className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/20 relative overflow-hidden group"
+    className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden group"
   >
     <div className={`absolute -right-8 -top-8 w-32 h-32 opacity-[0.03] transition-transform group-hover:scale-110 ${color}`}>
        <Icon className="w-full h-full" />
@@ -24,10 +24,10 @@ const Card = ({ icon: Icon, label, value, trend, trendValue, color, secondaryLab
 
     <div className="space-y-1">
       <div className="flex items-baseline gap-2">
-        <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{value}</h3>
-        {secondaryLabel && <span className="text-xs font-black text-slate-300 uppercase tracking-widest">{secondaryLabel}</span>}
+        <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{value}</h3>
+        {secondaryLabel && <span className="text-xs font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest">{secondaryLabel}</span>}
       </div>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{label}</p>
+      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{label}</p>
     </div>
   </motion.div>
 );

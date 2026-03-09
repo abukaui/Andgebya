@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wifi, WifiOff, Loader2, AlertCircle, MapPin, Navigation, Radio, Activity } from 'lucide-react';
+import { WifiOff, Loader2, MapPin, Radio, Activity } from 'lucide-react';
 import { GeoCoords } from './types';
 
 interface ControlCenterProps {
@@ -7,9 +7,7 @@ interface ControlCenterProps {
   isToggling: boolean;
   handleToggle: () => void;
   coords: GeoCoords | null;
-  geoError: string | null;
   pingCount: number;
-  lastUpdate: Date | null;
 }
 
 const ControlCenter = ({
@@ -17,9 +15,7 @@ const ControlCenter = ({
   isToggling,
   handleToggle,
   coords,
-  geoError,
-  pingCount,
-  lastUpdate
+  pingCount
 }: ControlCenterProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -129,14 +125,14 @@ const ControlCenter = ({
       </div>
 
       {/* Side Status Card */}
-      <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/20 flex flex-col justify-between">
+      <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-200/20 dark:shadow-none flex flex-col justify-between transition-colors">
         <div className="space-y-6">
            <div className="w-16 h-16 bg-blue-50 rounded-[1.5rem] flex items-center justify-center text-blue-600">
               <MapPin className="w-8 h-8" />
            </div>
            <div>
-              <h4 className="text-xl font-black text-slate-900 tracking-tight">Addis Ababa Core</h4>
-              <p className="text-slate-400 font-medium text-sm mt-1">Operational sector: BOLE</p>
+              <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Addis Ababa Core</h4>
+              <p className="text-slate-400 dark:text-slate-500 font-medium text-sm mt-1">Operational sector: BOLE</p>
            </div>
         </div>
 

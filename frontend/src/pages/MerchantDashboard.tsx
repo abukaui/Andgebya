@@ -27,7 +27,7 @@ export default function MerchantDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState<Product | null | 'new'>('');
+  const [editProduct, setEditProduct] = useState<Product | null | 'new'>(null);
   const [shopForm, setShopForm] = useState({ name: '', address: '' });
   const [creatingShop, setCreatingShop] = useState(false);
   const [shopError, setShopError] = useState('');
@@ -334,11 +334,11 @@ export default function MerchantDashboard() {
       </div>
 
       <AnimatePresence>
-        {(editProduct === 'new' || (editProduct && editProduct !== '')) && (
+        {editProduct !== null && (
           <ProductModal
             shopId={shop.id}
             product={editProduct === 'new' ? null : editProduct as Product}
-            onClose={() => setEditProduct('')}
+            onClose={() => setEditProduct(null)}
             onSaved={loadData}
           />
         )}

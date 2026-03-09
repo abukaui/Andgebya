@@ -1,0 +1,2 @@
+﻿src/pages/courier/ControlCenter.tsx(20,3): error TS6133: 'geoError' is declared but its value is never read.
+src/pages/courier/ControlCenter.tsx(22,3): error TS6133: 'lastUpdate' is declared but its value is never read.

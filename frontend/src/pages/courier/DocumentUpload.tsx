@@ -16,21 +16,21 @@ const DocumentUpload = () => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-2xl shadow-slate-200/30">
-        <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Fayda ID Verification</h3>
-        <p className="text-slate-400 font-medium mb-8 leading-relaxed">
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-200/30 dark:shadow-none transition-colors">
+        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Fayda ID Verification</h3>
+        <p className="text-slate-400 dark:text-slate-500 font-medium mb-8 leading-relaxed">
           Ardi requires a valid Ethiopian National ID (Fayda) to activate your merchant bonding. 
           Upload a clear photo of your ID card.
         </p>
 
         {!success ? (
           <div className="space-y-6">
-            <div className="border-4 border-dashed border-slate-50 rounded-[2.5rem] p-12 text-center group hover:bg-blue-50/30 hover:border-blue-100 transition-all duration-500 cursor-pointer">
-              <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-100 group-hover:scale-110 transition-all">
+            <div className="border-4 border-dashed border-slate-100 dark:border-slate-700 rounded-[2.5rem] p-12 text-center group hover:bg-blue-50/30 dark:hover:bg-blue-500/5 hover:border-blue-100 dark:hover:border-blue-500/30 transition-all duration-500 cursor-pointer">
+              <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-100 dark:group-hover:bg-blue-500/20 group-hover:scale-110 transition-all">
                 <Upload className="w-10 h-10 text-slate-400 group-hover:text-blue-600" />
               </div>
-              <p className="text-lg font-black text-slate-900">Drop your ID photo here</p>
-              <p className="text-sm font-bold text-slate-400 mt-1 uppercase tracking-widest">Support: JPG, PNG, PDF (Max 10MB)</p>
+              <p className="text-lg font-black text-slate-900 dark:text-white">Drop your ID photo here</p>
+              <p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">Support: JPG, PNG, PDF (Max 10MB)</p>
             </div>
 
             <button 
@@ -63,8 +63,8 @@ const DocumentUpload = () => {
         )}
       </div>
 
-      <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/20">
-        <h4 className="text-lg font-black text-slate-900 mb-4">Verification Guidelines</h4>
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 dark:shadow-none transition-colors">
+        <h4 className="text-lg font-black text-slate-900 dark:text-white mb-4">Verification Guidelines</h4>
         <ul className="space-y-4">
           {[
             'All text on the ID must be clearly readable',
@@ -73,7 +73,7 @@ const DocumentUpload = () => {
             'Name must match your registered Ardi profile'
           ].map((item, i) => (
             <li key={i} className="flex gap-4 group">
-               <div className="w-6 h-6 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-50 transition-colors">
+               <div className="w-6 h-6 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-50 dark:group-hover:bg-blue-500/10 transition-colors">
                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
                </div>
                <p className="text-sm font-bold text-slate-500 group-hover:text-slate-700 transition-colors tracking-tight">{item}</p>

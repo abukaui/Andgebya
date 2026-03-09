@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, Camera, Loader2, Save, User, Phone } from 'lucide-react';
 import api from '../services/api';
@@ -70,7 +70,7 @@ const ProfileSettingsModal = ({ user, onClose, onSuccess }: ProfileSettingsModal
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl relative"
+        className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl relative"
       >
         <button 
           onClick={onClose}
@@ -80,8 +80,8 @@ const ProfileSettingsModal = ({ user, onClose, onSuccess }: ProfileSettingsModal
         </button>
 
         <div className="mb-8">
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Profile Settings</h2>
-          <p className="text-slate-500 font-medium mt-1">Update your personal details</p>
+          <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Profile Settings</h2>
+          <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Update your personal details</p>
         </div>
 
         {error && (
@@ -122,35 +122,35 @@ const ProfileSettingsModal = ({ user, onClose, onSuccess }: ProfileSettingsModal
 
           <div className="space-y-4">
             {/* Full Name */}
-            <div className="bg-slate-50 rounded-2xl p-4 border border-transparent focus-within:border-blue-400 focus-within:bg-white transition-all">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:focus-within:bg-slate-700 transition-all">
               <div className="flex items-center gap-3 mb-1">
                  <User className="w-4 h-4 text-slate-400" />
-                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Full Name</span>
               </div>
               <input 
                 type="text" required
-                className="w-full bg-transparent border-none outline-none font-bold text-slate-900 pl-7 placeholder:text-slate-300"
+                className="w-full bg-transparent border-none outline-none font-bold text-slate-900 dark:text-white pl-7 placeholder:text-slate-300"
                 value={fullName} onChange={e => setFullName(e.target.value)}
               />
             </div>
 
             {/* Phone Number */}
-            <div className="bg-slate-50 rounded-2xl p-4 border border-transparent focus-within:border-blue-400 focus-within:bg-white transition-all">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:focus-within:bg-slate-700 transition-all">
               <div className="flex items-center gap-3 mb-1">
                  <Phone className="w-4 h-4 text-slate-400" />
-                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Phone Number</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Phone Number</span>
               </div>
               <input 
                 type="tel" required
-                className="w-full bg-transparent border-none outline-none font-bold text-slate-900 pl-7 placeholder:text-slate-300"
+                className="w-full bg-transparent border-none outline-none font-bold text-slate-900 dark:text-white pl-7 placeholder:text-slate-300"
                 value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
               />
             </div>
 
              {/* Email Readonly */}
-             <div className="bg-slate-50 opacity-60 rounded-2xl p-4 border border-transparent">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">Email Address (Read Only)</span>
-              <p className="font-bold text-slate-600 truncate">{user.email}</p>
+             <div className="bg-slate-50 dark:bg-slate-800 opacity-60 rounded-2xl p-4 border border-transparent">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-1">Email Address (Read Only)</span>
+              <p className="font-bold text-slate-600 dark:text-slate-400 truncate">{user.email}</p>
             </div>
           </div>
 

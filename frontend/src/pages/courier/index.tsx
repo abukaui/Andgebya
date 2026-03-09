@@ -25,13 +25,11 @@ export default function ProfessionalCourierDashboard() {
   const [profile, setProfile] = useState<CourierProfile | null>(null);
   const [isOnline, setIsOnline] = useState(false);
   const [coords, setCoords] = useState<GeoCoords | null>(null);
-  const [geoError, setGeoError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
-  const { t } = useSettings();
+  const { } = useSettings();
   const [activeTab, setActiveTab] = useState<CourierTab>('dashboard');
   const [pingCount, setPingCount] = useState(0);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -61,7 +59,6 @@ export default function ProfessionalCourierDashboard() {
 
     try {
       await api.post('/courier/location', { lat, lng });
-      setLastUpdate(new Date());
       setPingCount(p => p + 1);
     } catch (err) {
       console.error('Location push failed:', err);
@@ -69,14 +66,13 @@ export default function ProfessionalCourierDashboard() {
   }, []);
 
   const startTracking = useCallback(() => {
-    setGeoError(null);
     if (!navigator.geolocation) {
-      setGeoError('GPS Error: Hardware not found');
+      console.error('GPS Error: Hardware not found');
       return;
     }
 
     navigator.geolocation.getCurrentPosition(pushLocation, (err) => {
-      setGeoError(`GPS Auth: ${err.message}`);
+      console.error(`GPS Auth: ${err.message}`);
     }, { enableHighAccuracy: true });
 
     locationIntervalRef.current = setInterval(() => {
@@ -153,7 +149,7 @@ export default function ProfessionalCourierDashboard() {
               <Search className="w-4 h-4 text-slate-400" />
               <input 
                  placeholder="Search station logs..." 
-                 className="bg-transparent border-none outline-none text-sm font-bold text-slate-600 w-48"
+                 className="bg-transparent border-none outline-none text-sm font-bold text-slate-600 dark:text-slate-200 w-48"
               />
             </div>
           </div>
@@ -161,7 +157,7 @@ export default function ProfessionalCourierDashboard() {
           <div className="flex items-center gap-6">
             <div className="hidden sm:flex items-center gap-3 border-r border-slate-100 pr-6 mr-6">
                <div className="flex flex-col items-end leading-none">
-                  <p className="text-xs font-black text-slate-900 tracking-tight">{profile?.full_name}</p>
+                  <p className="text-xs font-black text-slate-900 dark:text-white tracking-tight">{profile?.full_name}</p>
                   <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">
                     {profile?.is_verified ? 'Verified Partner' : 'KYC Required'}
                   </p>
@@ -195,7 +191,7 @@ export default function ProfessionalCourierDashboard() {
                     <span>/</span>
                     <span className="text-blue-600">Hub Overview</span>
                  </nav>
-                 <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-none">
+                 <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
                     Good Morning, {profile?.full_name?.split(' ')[0] || 'Partner'} ⚡
                  </h2>
                  <p className="text-slate-500 font-medium mt-4 text-lg">System health is nominal. You have 0 pending dispatch requests.</p>
@@ -240,16 +236,14 @@ export default function ProfessionalCourierDashboard() {
                     isToggling={isToggling}
                     handleToggle={handleToggle}
                     coords={coords}
-                    geoError={geoError}
                     pingCount={pingCount}
-                    lastUpdate={lastUpdate}
                   />
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                      <ProfileSection profile={profile} />
                      
-                     <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/20">
-                        <h4 className="text-2xl font-black text-slate-900 tracking-tight mb-8">Dispatch Activity</h4>
+                     <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-200/20 dark:shadow-none transition-colors">
+                        <h4 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-8">Dispatch Activity</h4>
                         <div className="flex flex-col items-center justify-center py-12 text-center opacity-30 select-none border-2 border-dashed border-slate-50 rounded-[2rem]">
                            <Navigation className="w-16 h-16 mb-4 text-slate-300" />
                            <p className="font-black text-lg text-slate-400">No recent logs recorded</p>

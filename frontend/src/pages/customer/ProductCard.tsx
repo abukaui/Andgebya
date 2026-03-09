@@ -12,7 +12,7 @@ const ProductCard = ({ product, onOrderClick }: ProductCardProps) => {
     <motion.div 
       layout
       whileHover={{ y: -5 }}
-      className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/20 group relative"
+      className="bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/20 dark:shadow-none group relative"
     >
       <div className="relative h-56 bg-slate-100 overflow-hidden">
         {product.image_url ? (
@@ -43,7 +43,7 @@ const ProductCard = ({ product, onOrderClick }: ProductCardProps) => {
 
       <div className="p-6">
         <div className="flex items-start justify-between mb-2 gap-4">
-          <h3 className="text-xl font-black text-slate-900 tracking-tight leading-tight">{product.name}</h3>
+          <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">{product.name}</h3>
           <span className="text-blue-600 font-black text-xl whitespace-nowrap">
             ETB {Number(product.price).toFixed(0)}
           </span>
@@ -54,13 +54,13 @@ const ProductCard = ({ product, onOrderClick }: ProductCardProps) => {
         </p>
 
         {/* Shop Info Footer */}
-        <div className="bg-slate-50 rounded-2xl p-4 mb-6 relative overflow-hidden">
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 mb-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-white rounded-full -mr-8 -mt-8 opacity-50" />
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-1">
                <div className="flex items-center gap-2">
                  <Store className="w-4 h-4 text-slate-400" />
-                 <span className="font-bold text-slate-700 text-sm truncate max-w-[120px]">{product.shop_name}</span>
+                 <span className="font-bold text-slate-700 dark:text-slate-200 text-sm truncate max-w-[120px]">{product.shop_name}</span>
                </div>
                <div className="flex items-center gap-1 text-amber-500 bg-amber-50 px-2 py-1 rounded-lg">
                  <Star className="w-3 h-3 fill-current" />

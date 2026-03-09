@@ -29,7 +29,7 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
         setDropoffLng(pos.coords.longitude.toString());
         setError('');
       },
-      (err) => {
+      () => {
         setError('Failed to get location. Please enter manually.');
       }
     );
@@ -69,7 +69,7 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
+        className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
       >
         <button
           onClick={onClose}
@@ -79,8 +79,8 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
         </button>
 
         <div className="mb-8 pr-12">
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Confirm Delivery</h2>
-          <p className="text-slate-500 font-medium mt-1">Order <span className="font-bold text-slate-700">{product.name}</span> from {product.shop_name}</p>
+          <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Confirm Delivery</h2>
+          <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Order <span className="font-bold text-slate-700 dark:text-slate-200">{product.name}</span> from {product.shop_name}</p>
         </div>
 
         {error && (
@@ -92,24 +92,24 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Pickup Readonly */}
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+          <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600">
                 <Package className="w-4 h-4" />
               </div>
-              <span className="text-xs font-black uppercase tracking-widest text-slate-500">Pickup Location</span>
+              <span className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Pickup Location</span>
             </div>
-            <p className="font-bold text-slate-900 pl-11">{product.shop_address}</p>
+            <p className="font-bold text-slate-900 dark:text-white pl-11">{product.shop_address}</p>
           </div>
 
           {/* Dropoff Input */}
-          <div className="bg-white rounded-2xl p-4 border-2 border-slate-100 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border-2 border-slate-100 dark:border-slate-700 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-black uppercase tracking-widest text-slate-500">Dropoff Coordinates</span>
+                <span className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Dropoff Coordinates</span>
               </div>
               <button
                 type="button"
@@ -124,38 +124,38 @@ const RequestModal = ({ product, onClose, onSuccess }: RequestModalProps) => {
               <input
                 type="number" step="any" required
                 placeholder="Latitude (e.g. 9.03)"
-                className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:bg-white"
+                className="w-full bg-slate-50 dark:bg-slate-700 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:bg-white dark:focus:bg-slate-600"
                 value={dropoffLat} onChange={e => setDropoffLat(e.target.value)}
               />
               <input
                 type="number" step="any" required
                 placeholder="Longitude (e.g. 38.74)"
-                className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:bg-white"
+                className="w-full bg-slate-50 dark:bg-slate-700 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:bg-white dark:focus:bg-slate-600"
                 value={dropoffLng} onChange={e => setDropoffLng(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-4 border-2 border-slate-100 focus-within:border-blue-400 transition-all">
-            <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Delivery Instructions (Optional)</label>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border-2 border-slate-100 dark:border-slate-700 focus-within:border-blue-400 transition-all">
+            <label className="block text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Delivery Instructions (Optional)</label>
             <textarea
               placeholder="Gate code, apartment number, etc."
-              className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-medium text-slate-900 outline-none focus:bg-white resize-none h-20"
+              className="w-full bg-slate-50 dark:bg-slate-700 border-none rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:bg-white dark:focus:bg-slate-600 resize-none h-20"
               value={packageDetails} onChange={e => setPackageDetails(e.target.value)}
             />
           </div>
 
           {/* Price Breakdown */}
-          <div className="pt-6 border-t border-slate-100 space-y-2">
-            <div className="flex justify-between text-sm font-bold text-slate-500">
+          <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <div className="flex justify-between text-sm font-bold text-slate-500 dark:text-slate-400">
               <span>Item Total</span>
               <span>ETB {Number(product.price).toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-sm font-bold text-slate-500">
+            <div className="flex justify-between text-sm font-bold text-slate-500 dark:text-slate-400">
               <span>Delivery Fee</span>
               <span>ETB 50.00</span>
             </div>
-            <div className="flex justify-between items-center text-xl font-black text-slate-900 pt-2 border-t border-slate-50 mt-2">
+            <div className="flex justify-between items-center text-xl font-black text-slate-900 dark:text-white pt-2 border-t border-slate-50 dark:border-slate-800 mt-2">
               <span>Total Payment</span>
               <span>ETB {(Number(product.price) + 50).toFixed(2)}</span>
             </div>

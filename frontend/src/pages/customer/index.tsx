@@ -117,7 +117,7 @@ export default function CustomerDashboard() {
           <div className="flex items-center gap-6">
             <div className="hidden sm:flex items-center gap-3 border-r border-slate-100 pr-6 mr-6">
               <div className="flex flex-col items-end leading-none">
-                  <p className="text-xs font-black text-slate-900 tracking-tight">{profile?.full_name}</p>
+                  <p className="text-xs font-black text-slate-900 dark:text-white tracking-tight">{profile?.full_name}</p>
                   <p className="text-[10px] font-bold text-slate-400 mt-1">Prime Member</p>
               </div>
               <button 
@@ -152,7 +152,7 @@ export default function CustomerDashboard() {
                   {/* Dynamic Greeting */}
                   <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
-                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
+                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
                         Discover local <span className="text-blue-600">favorites.</span>
                       </h2>
                       <p className="text-slate-500 font-medium mt-4 text-lg">
@@ -173,18 +173,18 @@ export default function CustomerDashboard() {
 
                   {/* Catalog Grid */}
                   <div className="mb-8">
-                     <h3 className="text-xl font-black text-slate-900">
+                     <h3 className="text-xl font-black text-slate-900 dark:text-white">
                        {selectedCategory === 'All' ? 'Trending Now' : `${selectedCategory} Selection`}
                      </h3>
                      <p className="text-slate-400 font-bold text-sm mt-1">{filteredCatalog.length} results available</p>
                   </div>
 
                   {filteredCatalog.length === 0 ? (
-                    <div className="bg-white rounded-[3rem] py-32 text-center border border-slate-100 shadow-xl shadow-slate-200/50">
-                       <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="bg-white dark:bg-slate-900 rounded-[3rem] py-32 text-center border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none transition-colors">
+                       <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
                          <Search className="w-10 h-10 text-slate-300" />
                        </div>
-                       <p className="text-3xl font-black text-slate-900 tracking-tight">Nothing found</p>
+                       <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Nothing found</p>
                        <p className="text-slate-500 font-medium mt-3 text-lg max-w-md mx-auto">
                          We couldn't find any products matching your current filters. Try adjusting your search criteria.
                        </p>
@@ -222,9 +222,9 @@ export default function CustomerDashboard() {
                    animate={{ opacity: 1, scale: 1 }}
                    exit={{ opacity: 0, scale: 0.98 }}
                 >
-                   <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/20 text-center py-32">
+                   <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-200/20 dark:shadow-none text-center py-32 transition-colors">
                       <Package className="w-16 h-16 mx-auto mb-6 text-slate-300" />
-                      <h3 className="text-3xl font-black text-slate-900">Your Deliveries</h3>
+                      <h3 className="text-3xl font-black text-slate-900 dark:text-white">Your Deliveries</h3>
                       <p className="text-slate-500 mt-3 font-medium">Tracking module is currently under construction.</p>
                    </div>
                 </motion.div>
