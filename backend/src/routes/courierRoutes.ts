@@ -5,7 +5,9 @@ import {
   setAvailability,
   getCourierProfile,
   getNearbyCouriers,
+  uploadKYC,
 } from '../controllers/courierController';
+import { kycUpload } from '../middleware/uploadMiddleware';
 
 const router = Router();
 
@@ -19,5 +21,8 @@ router.get('/profile', getCourierProfile);
 
 // Nearby couriers — accessible by any authenticated user
 router.get('/nearby', getNearbyCouriers);
+
+// kyc upload
+router.post('/kyc/upload', kycUpload.fields([{ name: 'front', maxCount: 1 }, { name: 'back', maxCount: 1 }]), uploadKYC);
 
 export default router;

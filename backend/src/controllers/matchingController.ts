@@ -101,3 +101,44 @@ export const rejectJob = async (req: Request, res: Response) => {
 
   res.json({ message: 'Job rejected' });
 };
+
+/**
+ * PATCH /api/delivery/:id/status
+ * Courier updates the task status (e.g., to 'picked_up').
+ */
+export const updateTaskStatus = async (req: Request, res: Response) => {
+  const courierId = (req as any).user?.id;
+  const { id: deliveryId } = req.params;
+  const { status } = req.body;
+
+  const validStatuses = ['picked_up', 'in_transit'];
+  if (!validStatuses.includes(status)) {
+    res.status(400).json({ error: `Invalid status update: ${status}` });
+    return;
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE delivery_requests
+       SET status = $1,
+           picked_up_at = CASE WHEN $1 = 'picked_up' THEN NOW() ELSE picked_up_at END,
+           updated_at = NOW()
+       WHERE id = $2 AND courier_id = $3
+       RETURNING id, status`,
+      [status, deliveryId, courierId]
+    );
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: 'Delivery task not found or not assigned to you' });
+      return;
+    }
+
+    res.json({
+      message: `Task updated to ${status}`,
+      delivery: result.rows[0],
+    });
+  } catch (err: any) {
+    console.error('[Matching] updateTaskStatus error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

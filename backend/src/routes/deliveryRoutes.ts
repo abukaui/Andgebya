@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
 import { requestDelivery } from '../controllers/shopController';
-import { getAvailableJobs, acceptJob, rejectJob } from '../controllers/matchingController';
-import { confirmPayment, completeDelivery, getMyOrders } from '../controllers/financialController';
+import { getAvailableJobs, acceptJob, rejectJob, updateTaskStatus } from '../controllers/matchingController';
+import { confirmPayment, completeDelivery, getMyOrders, getCourierTasks } from '../controllers/financialController';
 
 const router = Router();
 
@@ -28,5 +28,11 @@ router.post('/:id/accept', authorize(['courier']), acceptJob);
 
 // POST /api/delivery/:id/reject — Courier rejects job
 router.post('/:id/reject', authorize(['courier']), rejectJob);
+
+// GET /api/delivery/courier/tasks — Courier fetches their active & past jobs
+router.get('/courier/tasks', authorize(['courier']), getCourierTasks);
+
+// PATCH /api/delivery/:id/status — Courier updates status (picked_up, in_transit)
+router.patch('/:id/status', authorize(['courier']), updateTaskStatus);
 
 export default router;

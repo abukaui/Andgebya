@@ -13,6 +13,7 @@ import VerificationAlert from './VerificationAlert';
 
 // Existing Views
 import DocumentUpload from './DocumentUpload';
+import TasksView from './TasksView';
 import ProfileSettingsModal from '../../components/ProfileSettingsModal';
 import SettingsView from '../../components/SettingsView';
 import { useSettings } from '../../context/SettingsContext';
@@ -90,7 +91,11 @@ export default function ProfessionalCourierDashboard() {
 
   const handleToggle = async () => {
     if (profile && !profile.is_verified) {
-      alert('Identity verification required. Please complete the verification process to go online.');
+      if (profile.kyc_status === 'pending') {
+        alert('Your verification is currently under review by Ardi admins. You will be notified once approved.');
+      } else {
+        alert('Identity verification required. Please complete the verification process to go online.');
+      }
       return;
     }
     setIsToggling(true);
@@ -208,8 +213,8 @@ export default function ProfessionalCourierDashboard() {
                     hours={profile?.total_hours ?? 0}
                   />
 
-                  {/* Verification Alert (shown if NOT verified) */}
-                  {profile && !profile.is_verified && (
+                  {/* Verification Alert (shown if NOT verified AND NOT pending) */}
+                  {profile && !profile.is_verified && profile.kyc_status !== 'pending' && (
                     <VerificationAlert onAction={() => setActiveTab('kyc')} />
                   )}
 
@@ -263,6 +268,17 @@ export default function ProfessionalCourierDashboard() {
                 </motion.div>
              )}
 
+             {activeTab === 'tasks' && (
+                <motion.div 
+                   key="tasks"
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, y: -20 }}
+                >
+                   <TasksView />
+                </motion.div>
+             )}
+
              {activeTab === 'kyc' && (
                 <motion.div 
                    key="kyc"
@@ -270,7 +286,10 @@ export default function ProfessionalCourierDashboard() {
                    animate={{ opacity: 1, scale: 1 }}
                    exit={{ opacity: 0, scale: 0.98 }}
                 >
-                   <DocumentUpload />
+                   <DocumentUpload 
+                     status={profile?.kyc_status} 
+                     onUploadSuccess={loadProfile} 
+                   />
                 </motion.div>
              )}
              

@@ -141,6 +141,40 @@ export const completeDelivery = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * GET /api/delivery/courier/tasks
+ * Returns all delivery requests assigned to the authenticated courier.
+ */
+export const getCourierTasks = async (req: Request, res: Response) => {
+  const courierId = (req as any).user?.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT 
+         dr.id, dr.status, dr.total_amount, dr.delivery_fee, dr.platform_fee,
+         dr.created_at, dr.matched_at, dr.picked_up_at, dr.delivered_at,
+         dr.package_details,
+         s.name AS shop_name, s.address AS shop_address,
+         u.full_name AS customer_name, u.phone_number AS customer_phone,
+         ST_X(dr.pickup_location::geometry) AS pickup_lng,
+         ST_Y(dr.pickup_location::geometry) AS pickup_lat,
+         ST_X(dr.dropoff_location::geometry) AS dropoff_lng,
+         ST_Y(dr.dropoff_location::geometry) AS dropoff_lat
+       FROM delivery_requests dr
+       LEFT JOIN shops s ON s.id = dr.shop_id
+       LEFT JOIN users u ON u.id = dr.customer_id
+       WHERE dr.courier_id = $1
+       ORDER BY dr.created_at DESC`,
+      [courierId]
+    );
+
+    res.json({ tasks: result.rows });
+  } catch (err: any) {
+    console.error('[Financial] getCourierTasks error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 // ─── CUSTOMER: My Orders ─────────────────────────────────────────────────────
 
 /**

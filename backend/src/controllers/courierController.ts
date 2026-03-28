@@ -167,7 +167,40 @@ export const getNearbyCouriers = async (req: Request, res: Response) => {
 
     res.status(200).json({ couriers: result.rows });
   } catch (err: any) {
-    console.error('[Courier] getNearbyCouriers error:', err);
+    res.status(500).json({ error: 'Internal server error', detail: err.message });
+  }
+};
+
+/**
+ * POST /api/courier/kyc/upload
+ * Handle Front and Back ID uploads. Set status to 'pending'.
+ */
+export const uploadKYC = async (req: Request, res: Response) => {
+  const userId = (req as any).user?.id;
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+  if (!files || !files.front || !files.back) {
+    res.status(400).json({ error: 'Both Front and Back photos are required.' });
+    return;
+  }
+
+  try {
+    // Update the profile to 'pending'
+    await pool.query(
+      `UPDATE courier_profiles
+       SET kyc_status = 'pending',
+           is_verified = FALSE,
+           updated_at = NOW()
+       WHERE user_id = $1`,
+      [userId]
+    );
+
+    res.status(200).json({
+      message: 'KYC documents uploaded successfully and are now under review.',
+      status: 'pending'
+    });
+  } catch (err: any) {
+    console.error('[Courier] uploadKYC error:', err);
     res.status(500).json({ error: 'Internal server error', detail: err.message });
   }
 };
