@@ -12,6 +12,11 @@ export interface CourierProfile {
   lng: number | null;
   profile_image_url?: string;
   settings?: any;
+  balance?: number;
+  rating?: number;
+  completed_deliveries?: number;
+  total_earnings?: number;
+  total_hours?: number;
 }
 
 export interface GeoCoords {
